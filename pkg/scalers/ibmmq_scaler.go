@@ -48,7 +48,7 @@ type IBMMQScaler struct {
 	metadata *IBMMQMetadata
 }
 
-// IBMMQMetadata: Metadata used by KEDA to query IBM MQ queue depth and scale
+// IBMMQMetadata Metadata used by KEDA to query IBM MQ queue depth and scale
 type IBMMQMetadata struct {
 	host             string
 	queueName        string
@@ -58,17 +58,17 @@ type IBMMQMetadata struct {
 	tlsDisabled      bool
 }
 
-// CommandResponse: Full structured response from MQ admin REST query
+// CommandResponse Full structured response from MQ admin REST query
 type CommandResponse struct {
 	CommandResponse []Response `json:"commandResponse"`
 }
 
-// Response: The body of the response returned from the MQ admin query
+// Response The body of the response returned from the MQ admin query
 type Response struct {
 	Parameters Parameters `json:"parameters"`
 }
 
-// Parameters: Contains the current depth of the IBM MQ Queue
+// Parameters Contains the current depth of the IBM MQ Queue
 type Parameters struct {
 	Curdepth int `json:"curdepth"`
 }
@@ -83,7 +83,7 @@ func NewIBMMQScaler(config *ScalerConfig) (Scaler, error) {
 	return &IBMMQScaler{metadata: meta}, nil
 }
 
-// IBMMQScaler.Close: closes and returns nil
+// Close closes and returns nil
 func (s *IBMMQScaler) Close() error {
 	return nil
 }
@@ -156,7 +156,6 @@ func (s *IBMMQScaler) IsActive(ctx context.Context) (bool, error) {
 
 // getQueueDepthViaHTTP returns the depth of the MQ Queue from the Admin endpoint
 func (s *IBMMQScaler) getQueueDepthViaHTTP() (int, error) {
-
 	queue := s.metadata.queueName
 	url := s.metadata.host
 
