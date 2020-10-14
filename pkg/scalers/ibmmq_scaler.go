@@ -175,7 +175,7 @@ func (s *IBMMQScaler) getQueueDepthViaHTTP() (int, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return 0, fmt.Errorf("failed to contact MQ via REST: %s", err)
 	}
 	defer resp.Body.Close()
 
@@ -184,6 +184,9 @@ func (s *IBMMQScaler) getQueueDepthViaHTTP() (int, error) {
 	var response CommandResponse
 	json.Unmarshal(body, &response)
 
+	if response.CommandResponse == nil || len(response.CommandResponse) == 0 {
+		return 0, fmt.Errorf("failed to parseresponse from REST call: %s", err)
+	}
 	return response.CommandResponse[0].Parameters.Curdepth, nil
 }
 
