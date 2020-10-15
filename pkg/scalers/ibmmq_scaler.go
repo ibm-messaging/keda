@@ -179,10 +179,16 @@ func (s *IBMMQScaler) getQueueDepthViaHTTP() (int, error) {
 	}
 	defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return 0, fmt.Errorf("failed to ready body of request: %s", err)
+	}
 
 	var response CommandResponse
-	json.Unmarshal(body, &response)
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse JSON: %s", err)
+	}
 
 	if response.CommandResponse == nil || len(response.CommandResponse) == 0 {
 		return 0, fmt.Errorf("failed to parseresponse from REST call: %s", err)
